@@ -1,0 +1,60 @@
+<?php
+
+/** @var yii\web\View $this */
+/** @var app\models\Comment[] $comments */
+/** @var yii\widgets\ActiveForm $form */
+
+use yii\widgets\ActiveForm;
+
+?>
+
+<!-- comments start -->
+<?php if (!empty($comments)): ?>
+
+    <?php foreach ($comments as $comment): ?>
+        <div class="bottom-comment">
+            <div class="comment-img">
+                <img width="50" class="img-circle" src="<?= $comment->user->image ?>" alt="">
+            </div>
+
+            <div class="comment-text">
+                <a href="#" class="reply btn pull-right"><?= Yii::t('app', 'Reply') ?></a>
+                <h5><?= $comment->user->name ?></h5>
+
+                <p class="comment-date">
+                    <?= $comment->getDate() ?>
+                </p>
+
+                <p class="para"><?= $comment->text ?></p>
+            </div>
+        </div>
+    <?php endforeach; ?>
+
+<?php endif; ?>
+<!-- comments end -->
+
+<!-- comment form start -->
+<?php if (!Yii::$app->user->isGuest): ?>
+    <div class="leave-comment">
+        <h4><?= Yii::t('app', 'Leave a Reply') ?></h4>
+
+        <?php if (Yii::$app->session->getFlash('comment')): ?>
+            <div class="alert alert-success" role="alert">
+                <?= Yii::$app->session->getFlash('comment') ?>
+            </div>
+        <?php endif; ?>
+
+        <?php $form = ActiveForm::begin([
+            'action' => ['site/comment', 'id' => $article->id],
+            'options' => ['class' => 'form-horizontal contact-form', 'role' => 'form']]) ?>
+            <div>
+                <div class="col-md-12">
+                    <?= $form->field($commentForm, 'comment')->textarea(['class' => 'form-control', 'placeholder' => Yii::t('app', 'Write Message')])->label(false) ?>
+                </div>
+            </div>
+            <button type="submit" class="btn send-btn"><?= Yii::t('app', 'Post Comment') ?></button>
+        <?php ActiveForm::end() ?>
+
+    </div>
+<?php endif; ?>
+<!-- comment form end -->
